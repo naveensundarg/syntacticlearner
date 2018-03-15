@@ -5,7 +5,7 @@ import com.naveensundarg.metrics.Metrics;
 
 public interface Learner {
 
-     void train(Dataset  t);
+    void train(Dataset  t);
     Metrics test(Dataset  t);
 
 }
