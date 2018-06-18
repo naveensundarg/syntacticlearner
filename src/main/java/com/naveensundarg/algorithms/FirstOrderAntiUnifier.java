@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.naveensundarg.common.Utils.mapWith;
+import static com.naveensundarg.common.Utils.reverseMap;
+import static com.naveensundarg.common.Utils.reverseMapSet;
 
 public class FirstOrderAntiUnifier {
 
@@ -26,7 +28,7 @@ public class FirstOrderAntiUnifier {
     public static Value  antiUnify(List<Value> inputs) {
 
 
-         return inputs.stream().reduce(inputs.get(0), (x,y)-> FirstOrderAntiUnifier.antiUnify(x,y).getLeft());
+         return  antiUnify(inputs, new AtomicInteger(0));
 
     }
 
@@ -74,14 +76,36 @@ public class FirstOrderAntiUnifier {
 
         if (left instanceof Variable) {
 
+            Map<Variable, Set<Value>> bindings = Utils.reverseMapSet(stack);
+
+            if(bindings.containsKey(left) && !bindings.get(left).contains(right)){
+
+
+                Variable var =  (Variable) Utils.readValueFromString("?x" + variableNumber.getAndIncrement());
+
+                return Pair.of(var, mapWith(left, var, right, var));
+
+            }
+
             return Pair.of(left, mapWith(right, (Variable) left));
         }
         if (right instanceof Variable) {
 
+            Map<Variable, Set<Value>> bindings = Utils.reverseMapSet(stack);
+
+            if(bindings.containsKey(right) && !bindings.get(right).contains(right)){
+
+
+                Variable var =  (Variable) Utils.readValueFromString("?x" + variableNumber.getAndIncrement());
+
+                return Pair.of(var, mapWith(left, var, right, var));
+
+            }
             return Pair.of(right, mapWith(right, (Variable) right));
         }
 
         if(left instanceof Constant && right instanceof Constant){
+
 
             Variable var =  (Variable) Utils.readValueFromString("?x" + variableNumber.getAndIncrement());
 
@@ -108,6 +132,7 @@ public class FirstOrderAntiUnifier {
                 Value rightValue = right.getArguments()[i];
 
                 Pair<Value, Map<Value, Variable>> generalizedArg = antiUnify(leftValue.generalize(stack), rightValue.generalize(stack), variableNumber, stack);
+
 
                 generalValues[i] = generalizedArg.getLeft();
                 stack.putAll(generalizedArg.getRight());

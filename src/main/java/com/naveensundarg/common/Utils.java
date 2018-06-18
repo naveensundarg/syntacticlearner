@@ -3,6 +3,7 @@ package com.naveensundarg.common;
 import com.naveensundarg.shadow.prover.representations.value.Value;
 import com.naveensundarg.shadow.prover.utils.CollectionUtils;
 import com.naveensundarg.shadow.prover.utils.Reader;
+import com.naveensundarg.shadow.prover.utils.Sets;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -48,6 +49,24 @@ public class Utils {
         }
 
         return Optional.of(reversedMap);
+
+    }
+
+    public static <U, V> Map<V,Set<U>> reverseMapSet(Map<U,V> map){
+
+        Map<V, Set<U>> reversedMap = CollectionUtils.newMap();
+
+        for(Map.Entry<U, V> entry : map.entrySet()){
+
+            if(!reversedMap.containsKey(entry.getValue())){
+
+                reversedMap.put(entry.getValue(), Sets.newSet());
+            }
+
+            reversedMap.put(entry.getValue(), Sets.add(reversedMap.get(entry.getValue()), entry.getKey()));
+        }
+
+        return reversedMap;
 
     }
 

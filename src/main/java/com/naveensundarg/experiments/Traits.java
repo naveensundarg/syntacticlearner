@@ -15,11 +15,18 @@ public class Traits {
 
 
 
+/*
             List<Value> inputs = inputs("(trait (Believes! a1 (holds (old x) t1)) (happens (utters a1 (old x)) (+ t1 1)))",
                                         "(trait (Believes! a2 (holds (new y) t2)) (happens (utters a2 (new y)) (+ t2 1)))",
                                         "(trait (Believes! a3 (holds (new y) t3)) (happens (utters a3 (new y)) (+ t3 1)))");
+*/
 
-            System.out.println(FirstOrderAntiUnifier.antiUnify(inputs));
+        List<Value> inputs = inputs("(P a a) ",
+                "(P u v) ");
+
+
+
+        System.out.println(FirstOrderAntiUnifier.antiUnify(inputs));
 
     }
 
